@@ -28,20 +28,20 @@ const addMood = (moodId, accessToken) => {
 
         let { items, next } = await userTracksData.json();
 
-        if(next != null) {
+        let userMood = await dataAnalysis.resourceData({
+            angry: 0,
+            nervous: 0,
+            bored: 0,
+            sad: 0,
+            sleepy: 0,
+            peaceful: 0,
+            relaxed: 0,
+            pleased: 0,
+            happy: 0,
+            excited: 0
+        }, items, accessToken);
 
-            let userMood = dataAnalysis({
-                angry: 0,
-                nervous: 0,
-                bored: 0,
-                sad: 0,
-                sleepy: 0,
-                peaceful: 0,
-                relaxed: 0,
-                pleased: 0,
-                happy: 0,
-                excited: 0
-            }, items, accessToken);
+        if(next != null) {
 
             do {
 
@@ -56,7 +56,7 @@ const addMood = (moodId, accessToken) => {
                 items = data.items;
                 next = data.next;
 
-                userMood = dataAnalysis(userMood, items, accessToken);
+                userMood = await dataAnalysis.resourceData(userMood, items, accessToken);
                 offset += 50;
         
             } while (next != null)
@@ -80,19 +80,6 @@ const addMood = (moodId, accessToken) => {
 
         } else {
 
-            const userMood = dataAnalysis({
-                angry: 0,
-                nervous: 0,
-                bored: 0,
-                sad: 0,
-                sleepy: 0,
-                peaceful: 0,
-                relaxed: 0,
-                pleased: 0,
-                happy: 0,
-                excited: 0
-            }, items, accessToken);
-    
             const mood = {
                 _id: moodId,
                 angry: userMood.angry,
