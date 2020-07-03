@@ -25,8 +25,8 @@ router.post('/', (req, res) => {
         })
 })
 
-router.patch('/:moodId', (req, res) => {
-    controller.updateMood(req.params.moodId, req.body.accessToken, req.body.userTotalPlayed)
+router.patch('/', (req, res) => {
+    controller.updateMood(req.body.accessToken, req.body.userId)
         .then(data => {
             response.succes(req, res, data, 200);
         })

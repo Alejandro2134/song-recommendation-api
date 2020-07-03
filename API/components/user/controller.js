@@ -58,13 +58,13 @@ const addUser = (accessToken) => {
 
         try {
 
-            const data = await fetch('https://api.spotify.com/v1/me', {
+            const spotifyUserData = await fetch('https://api.spotify.com/v1/me', {
                 headers: {
                     'Authorization': `Bearer ${accessToken}` 
                 }
             })
 
-            const response = await data.json();
+            const { id, display_name, error, images } = await spotifyUserData.json();
 
             const userSavedTracksData = await fetch('https://api.spotify.com/v1/me/tracks', {
                 headers: {
@@ -72,26 +72,39 @@ const addUser = (accessToken) => {
                 }
             })
 
-            const userSavedTracksDataResponse = await userSavedTracksData.json();
+            const { total } = await userSavedTracksData.json();
 
-            if(response.error) {
-                reject(response.error);
+            if(error) {
+                reject(error);
             } else {
 
                 let url = '';
 
-                if(Object.hasOwnProperty(response.images[0], 'url')) {
-                    url = response.images[0].url;
+                if(Object.hasOwnProperty(images[0], 'url')) {
+                    url = images[0].url;
                 } else {
                     url = 'na';
                 }
+
+                const moodId = objectId;
+
+                await fetch('http://localhost:3000/mood', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        "moodId": moodId,
+                        "accessToken": accessToken,
+                    })
+                })
                 
                 const user = {
-                    spotifyId: response.id,
-                    name: response.display_name,
+                    spotifyId: id,
+                    name: display_name,
                     image: url,
-                    totalPlayed: userSavedTracksDataResponse.total,
-                    mood: objectId
+                    totalPlayed: total,
+                    mood: moodId
                 }
 
                 store.add(user);
