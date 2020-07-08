@@ -41,6 +41,8 @@ const addMood = (moodId, accessToken) => {
                 excited: 0
             }, items, accessToken);
 
+            userMood._id = moodId;
+
             if(next != null) {
 
                 do {
@@ -59,42 +61,14 @@ const addMood = (moodId, accessToken) => {
                     userMood = await resourceData(userMood, items, accessToken);
             
                 } while (next != null)
-        
-                const mood = {
-                    _id: moodId,
-                    angry: userMood.angry,
-                    nervous: userMood.nervous,
-                    bored: userMood.bored,
-                    sad: userMood.sad,
-                    sleepy: userMood.sleepy,
-                    peaceful: userMood.peaceful,
-                    relaxed: userMood.relaxed,
-                    pleased: userMood.pleased,
-                    happy: userMood.happy,
-                    excited: userMood.excited
-                }
-            
-                store.add(mood);
-                resolve(mood);
+         
+                store.add(userMood);
+                resolve(userMood);
 
             } else {
 
-                const mood = {
-                    _id: moodId,
-                    angry: userMood.angry,
-                    nervous: userMood.nervous,
-                    bored: userMood.bored,
-                    sad: userMood.sad,
-                    sleepy: userMood.sleepy,
-                    peaceful: userMood.peaceful,
-                    relaxed: userMood.relaxed,
-                    pleased: userMood.pleased,
-                    happy: userMood.happy,
-                    excited: userMood.excited
-                }
-            
-                store.add(mood);
-                resolve(mood);
+                store.add(userMood);
+                resolve(userMood);
 
             }
 
